@@ -10,8 +10,13 @@ import Foundation
 import SpriteKit
 
 class Player: SKSpriteNode {
-
-    let Trooparray = ["Troop1","Troop2"]
+    var playerHealth = 200
+    
+    func pickTroop() {
+//        var Trooparray = ["Troop1","Troop2"]
+//        var arrayIndex: Int = 0
+        
+    }
     
     func loadtroop()
     {

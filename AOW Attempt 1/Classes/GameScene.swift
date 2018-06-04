@@ -26,6 +26,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         physicsWorld.contactDelegate = self
         
+        let camera = SKCameraNode()
+        camera.position = CGPoint(x: 0, y: 0)
+        self.camera = camera
+        self.addChild(camera)
+        
         buttonT1 = SKSpriteNode(color: SKColor.red, size: CGSize(width:30, height:30))
         buttonT1.position = CGPoint(x:-320, y:150)
 
@@ -44,8 +49,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func spawnTroop() {
         let newTroop = Player(imageNamed: "Troop1")
         newTroop.loadtroop()
+        newTroop.zPosition = 1
         self.addChild(newTroop)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let edgepan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
+        edgepan.edges = .left
+        
+        GameScene.addGestureRecognizer(edgepan)
+    }
+    
+    @objc func screenEdgeSwiped(_ recognizer:UIScreenEdgePanGestureRecognizer)
+    {
+        if recognizer.state == .recognized {
+            
+        }
+    }
+
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch: AnyObject in touches {
@@ -70,7 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        if firstBody.node?.name == "enemy1" && secondBody.node?.name == "Base1" {
+        if firstBody.node?.name == "enemy1" && secondBody.node?.name == "playerBase" {
             let enemy = firstBody.node as! Enemy
             enemy.EnemyHealth -= 20
             print(enemy.EnemyHealth)
@@ -80,10 +101,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if firstBody.node?.name == "enemy1" && secondBody.node?.name == "troop1"{
+                        
             let array = ["1","2"]
             let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
             let randomitem = array[randomIndex]
-            
+
             if randomitem == "1" {
                 firstBody.node?.removeFromParent()
             }else {
@@ -132,48 +154,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         imgNode1.physicsBody?.isDynamic = false
         
     }
-    
-//    func addenemy1()
-//    {
-//        let enemytexture = SKTexture(imageNamed: "Enemy1")
-//        enemy = SKSpriteNode(texture: enemytexture)
-//        enemy.position = CGPoint(x: 240, y: -136)
-//        enemy.name = "enemy1"
-//
-//        addChild(enemy)
-//
-//        enemy.physicsBody = SKPhysicsBody(texture: enemytexture, size: enemytexture.size())
-//        enemy.physicsBody?.isDynamic = true
-//        enemy.physicsBody?.affectedByGravity = false
-//        enemy.physicsBody?.categoryBitMask = 2
-//        enemy.physicsBody?.contactTestBitMask = 1
-//        enemy.physicsBody?.collisionBitMask = 1
-//
-//
-//        let enemyduration = CGFloat(8.0)
-//
-//        let actionEmove = SKAction.move(to: CGPoint(x: -280,y: -136), duration: TimeInterval(enemyduration))
-//        enemy.run(SKAction.sequence([actionEmove]))
-//    }
-//
-//    func addTroop1() {
-//        let troopTexture = SKTexture(imageNamed: "Troop1")
-//        troop1 = SKSpriteNode(texture: troopTexture)
-//        troop1.position = CGPoint(x:-280, y:-136)
-//
-//        addChild(troop1)
-//
-//        troop1.physicsBody = SKPhysicsBody(texture: troopTexture, size: troopTexture.size())
-//        troop1.physicsBody?.isDynamic = true
-//        troop1.physicsBody?.affectedByGravity = false
-//        troop1.physicsBody?.categoryBitMask = 1
-//        troop1.physicsBody?.contactTestBitMask = 2
-//        troop1.physicsBody?.collisionBitMask = 2
-//
-//        let troopMovement = CGFloat(8.0)
-//
-//        let actionTMove = SKAction.move(to: CGPoint(x:240, y:-136), duration: TimeInterval(troopMovement))
-//        troop1.run(SKAction.sequence([actionTMove]))
-//    }
+
 
 }
