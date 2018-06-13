@@ -9,19 +9,20 @@
 import SpriteKit
 import GameplayKit
 
+private let backgroundMove = "moveable"
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-//    var enemy: SKSpriteNode!
     var playerBase: SKSpriteNode!
     var buttonT1: SKNode! = nil
-//    var troop1: SKSpriteNode!
+    let background = SKSpriteNode(imageNamed:"BackGround")
+    var selectedNode = SKSpriteNode()
 
     
     override func didMove(to view: SKView) {
-        backcolor()
+        bGround()
         Base1()
         ground()
-
+        
         Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
         
         physicsWorld.contactDelegate = self
@@ -53,20 +54,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(newTroop)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let edgepan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
-        edgepan.edges = .left
-        
-        GameScene.addGestureRecognizer(edgepan)
-    }
-    
-    @objc func screenEdgeSwiped(_ recognizer:UIScreenEdgePanGestureRecognizer)
-    {
-        if recognizer.state == .recognized {
-            
-        }
-    }
-
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch: AnyObject in touches {
@@ -100,7 +87,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        if firstBody.node?.name == "enemy1" && secondBody.node?.name == "troop1"{
+        if firstBody.node?.name == "enemy1" && secondBody.node?.name == "troop"{
                         
             let array = ["1","2"]
             let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
@@ -112,22 +99,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 secondBody.node?.removeFromParent()
             }
         }
-        
     }
     
     
-    func backcolor() {
-        let backcolour = SKSpriteNode(color: UIColor(hue: 0.55, saturation: 0.14, brightness: 0.97, alpha: 1), size: CGSize(width: frame.width, height: frame.height))
-        backcolour.position = CGPoint(x: frame.midX, y: frame.midY)
+    func bGround() {
+        let backGround = SKSpriteNode(imageNamed: "BackGround")
+        backGround.name = "backG"
+        backGround.zPosition = -2
         
-        addChild(backcolour)
-            }
+        self.addChild(backGround)
+        
+        }
     
     func Base1(){
+        
         let Basetexture = SKTexture(imageNamed: "Base1")
         playerBase = SKSpriteNode(texture: Basetexture)
         playerBase.position = CGPoint(x: -290 , y: -90)
         playerBase.name = "playerBase"
+        playerBase.zPosition = -1
+        
+//        var baseHealth = 1000
         
         self.addChild(playerBase)
         
@@ -154,6 +146,4 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         imgNode1.physicsBody?.isDynamic = false
         
     }
-
-
 }

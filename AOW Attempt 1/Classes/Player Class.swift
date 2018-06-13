@@ -22,7 +22,7 @@ class Player: SKSpriteNode {
     {
         //setting position and name of SpriteNode
         position = CGPoint(x:-280, y:-136)
-        name = "troop1"
+        name = "troop"
         
         // player physics body
         physicsBody = SKPhysicsBody(rectangleOf: size)
