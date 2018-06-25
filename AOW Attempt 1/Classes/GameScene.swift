@@ -54,6 +54,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(newTroop)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch: AnyObject in touches{
+            let positionInScene = touch.location(in: self)
+            
+            selectedNodeForTouch(touchLocation: positionInScene)
+        }
+    }
+    
+    func selectedNodeForTouch(touchLocation: CGPoint)
+    {
+        let touchedNode = self.atPoint(touchLocation)
+        
+        if touchedNode is SKSpriteNode {
+            if !selectedNode.isEqual(touchedNode) {
+                selectedNode.removeAllActions()
+            }
+        }
+    }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch: AnyObject in touches {
@@ -146,4 +164,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         imgNode1.physicsBody?.isDynamic = false
         
     }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch: AnyObject in touches {
+            let positionInScene = touch.location(in: self)
+            let previousPos = touch.previousLocation(in: self)
+            _ = CGPoint(x: positionInScene.x - previousPos.x, y: positionInScene.y - previousPos.y)
+        }
+    }
+    
+    func boundLayerPos(aNewPosition: CGPoint) -> CGPoint {
+        let winSize = self.size
+        var retval = aNewPosition
+        retval.x = CGFloat(min(retval.x, 0))
+        retval.x = CGFloat(max(retval.x, -(background.size.width) + winSize.width))
+        retval.y = self.position.y
+        
+        return retval
+    }
+    
+    func panForTranslation(translation: CGPoint) {
+        let position = selectedNode.position
+        
+        if selectedNode.name! == backgroundMove {
+            selectedNode.position = CGPoint(x: position.x + translation.x, y: position.y + translation.y)
+        } else {
+            let aNewPosition = CGPoint(x: position.x + translation.x, y: position.y + translation.y)
+            background.position = self.boundLayerPos(aNewPosition: aNewPosition)
+        }
+    }
 }
+
+
