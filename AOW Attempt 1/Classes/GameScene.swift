@@ -8,28 +8,33 @@
 
 import SpriteKit
 import GameplayKit
+import AVFoundation
 
-private let backgroundMove = "moveable"
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerBase: SKSpriteNode!
+    var enemyBase: SKSpriteNode!
     var buttonT1: SKNode! = nil
-    let background = SKSpriteNode(imageNamed:"BackGround")
-    var selectedNode = SKSpriteNode()
+    let background = SKSpriteNode(imageNamed: "BackGround")
+    var selectedNode = SKCameraNode()
 
     
     override func didMove(to view: SKView) {
-        bGround()
-        Base1()
-        ground()
-        
-        Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
-        
         physicsWorld.contactDelegate = self
         
+        bGround()
+        Base()
+        ground()
+        
+        
+        Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
+        //Timer for enemy spawn
+        
         let camera = SKCameraNode()
-        camera.position = CGPoint(x: 0, y: 0)
+        camera.position = CGPoint(x: -100, y: 0)
+        camera.xScale = 0.75
         self.camera = camera
+        
         self.addChild(camera)
         
         buttonT1 = SKSpriteNode(color: SKColor.red, size: CGSize(width:30, height:30))
@@ -39,49 +44,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     }
     
+    // Enemy Spawn
     @objc func spawnEnemy() {
-        
         let newEnemy = Enemy(imageNamed: "Enemy1")
         newEnemy.loadEnemy()
         self.addChild(newEnemy)
-        
     }
     
     func spawnTroop() {
-        let newTroop = Player(imageNamed: "Troop1")
+        let newTroop = Player(imageNamed: "troop")
         newTroop.loadtroop()
         newTroop.zPosition = 1
         self.addChild(newTroop)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch: AnyObject in touches{
-            let positionInScene = touch.location(in: self)
-            
-            selectedNodeForTouch(touchLocation: positionInScene)
-        }
-    }
-    
-    func selectedNodeForTouch(touchLocation: CGPoint)
-    {
-        let touchedNode = self.atPoint(touchLocation)
+    // Pan Function connect to the camera Node used for scrolling between HomeBase and EnemyBase
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if touchedNode is SKSpriteNode {
-            if !selectedNode.isEqual(touchedNode) {
-                selectedNode.removeAllActions()
-            }
+        let loc = (touches.first?.location(in: self).x)
+        let ploc = (touches.first?.previousLocation(in: self).x)
+        let deltax = CGFloat(Double(loc!) - Double(ploc!))
+        if (((self.camera?.position.x)! > CGFloat(-110)) && ((self.camera?.position.x)! < CGFloat(300))){
+            self.camera?.position.x += (deltax * -1)
+        }
+        if ((self.camera?.position.x)! > CGFloat(300) && deltax > 0) {
+            self.camera?.position.x += (deltax * -1)
+        }
+        if ((self.camera?.position.x)! < CGFloat(-110) && deltax < 0) {
+            self.camera?.position.x += (deltax * -1)
         }
     }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch: AnyObject in touches {
-            let location = touch.location(in: self)
-            
-            if buttonT1.contains(location){
-                spawnTroop()
-            }
-        }
-    }
+
     // the physics contact delegate handles all collisions and contacts between physics bodies
     func didBegin(_ contact: SKPhysicsContact) {
         
@@ -119,27 +112,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func bGround(){
+        let background = SKSpriteNode(imageNamed: "BackGround")
+        background.position = CGPoint(x:0 , y:0)
+        background.zPosition = -5
+        
+        self.addChild(background)
+        
+    }
     
-    func bGround() {
-        let backGround = SKSpriteNode(imageNamed: "BackGround")
-        backGround.name = "backG"
-        backGround.zPosition = -2
-        
-        self.addChild(backGround)
-        
-        }
-    
-    func Base1(){
-        
+    func Base(){
         let Basetexture = SKTexture(imageNamed: "Base1")
+        
         playerBase = SKSpriteNode(texture: Basetexture)
         playerBase.position = CGPoint(x: -290 , y: -90)
         playerBase.name = "playerBase"
         playerBase.zPosition = -1
         
-//        var baseHealth = 1000
+        enemyBase = SKSpriteNode(texture: Basetexture)
+        enemyBase.position = CGPoint(x: 550, y: -90)
+        enemyBase.name = "enemyBase"
+        enemyBase.zPosition = -1
         
         self.addChild(playerBase)
+        self.addChild(enemyBase)
         
         playerBase.physicsBody = SKPhysicsBody(texture: Basetexture, size: Basetexture.size())
         playerBase.physicsBody?.isDynamic = false
@@ -156,7 +152,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let imgNode1 = SKSpriteNode(texture: imgGround)
         imgNode1.position = CGPoint(x: 0, y: -190)
         
+        let Ground = SKTexture(imageNamed: "Ground")
+        let Ground2 = SKSpriteNode(texture: Ground)
+        Ground2.position = CGPoint(x: 400, y: -190)
+        
         self.addChild(imgNode1)
+        self.addChild(Ground2)
         
         imgNode1.physicsBody = SKPhysicsBody(texture: imgGround, size: imgGround.size())
         imgNode1.physicsBody?.pinned = true
@@ -165,34 +166,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch: AnyObject in touches {
-            let positionInScene = touch.location(in: self)
-            let previousPos = touch.previousLocation(in: self)
-            _ = CGPoint(x: positionInScene.x - previousPos.x, y: positionInScene.y - previousPos.y)
-        }
-    }
-    
-    func boundLayerPos(aNewPosition: CGPoint) -> CGPoint {
-        let winSize = self.size
-        var retval = aNewPosition
-        retval.x = CGFloat(min(retval.x, 0))
-        retval.x = CGFloat(max(retval.x, -(background.size.width) + winSize.width))
-        retval.y = self.position.y
-        
-        return retval
-    }
-    
-    func panForTranslation(translation: CGPoint) {
-        let position = selectedNode.position
-        
-        if selectedNode.name! == backgroundMove {
-            selectedNode.position = CGPoint(x: position.x + translation.x, y: position.y + translation.y)
-        } else {
-            let aNewPosition = CGPoint(x: position.x + translation.x, y: position.y + translation.y)
-            background.position = self.boundLayerPos(aNewPosition: aNewPosition)
-        }
-    }
 }
 
 

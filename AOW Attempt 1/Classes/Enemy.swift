@@ -16,8 +16,10 @@ class Enemy:SKSpriteNode {
     func loadEnemy() {
         
         // Sets Position and Name
-        position = CGPoint(x: 240, y: -136)
+        position = CGPoint(x: 550, y: -136)
         name = "enemy1"
+        zPosition = 1
+        print("yes")
         
         // Loads the Physics for the Enemy
         physicsBody = SKPhysicsBody(rectangleOf: size)

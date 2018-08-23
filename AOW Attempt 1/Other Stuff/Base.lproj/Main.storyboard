@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
     <device id="retina4_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,27 +13,20 @@
         <scene sceneID="tXr-a1-R10">
             <objects>
                 <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="AOW_Attempt_1" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SKView">
-                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lXv-vb-oLa">
-                                <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
-                            </scrollView>
-                        </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="4qk-I5-YsI" firstAttribute="bottom" secondItem="lXv-vb-oLa" secondAttribute="bottom" id="4PZ-Kn-wYz"/>
-                            <constraint firstItem="lXv-vb-oLa" firstAttribute="leading" secondItem="4qk-I5-YsI" secondAttribute="leading" id="LaZ-Cm-r7O"/>
-                            <constraint firstItem="lXv-vb-oLa" firstAttribute="top" secondItem="4qk-I5-YsI" secondAttribute="top" id="Xx9-1t-lej"/>
-                            <constraint firstItem="4qk-I5-YsI" firstAttribute="trailing" secondItem="lXv-vb-oLa" secondAttribute="trailing" id="fTV-pL-10l"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="4qk-I5-YsI"/>
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9Ko-JI-Hpc"/>
+                        <viewControllerLayoutGuide type="bottom" id="Xbc-RK-hWb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ek2-CO-cRA" customClass="SKView">
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="400"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <size key="freeformSize" width="800" height="400"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="54" y="39"/>
+            <point key="canvasLocation" x="53.073463268365821" y="36.799999999999997"/>
         </scene>
     </scenes>
 </document>
