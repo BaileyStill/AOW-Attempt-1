@@ -10,7 +10,8 @@ import Foundation
 import SpriteKit
 
 class Player: SKSpriteNode {
-    var playerHealth = 200
+    var playerHealth = 100
+    var playerAttack = 10
     
     func pickTroop() {
 //        var Trooparray = ["Troop1","Troop2"]
@@ -22,7 +23,8 @@ class Player: SKSpriteNode {
     {
         //setting position and name of SpriteNode
         position = CGPoint(x:-280, y:-136)
-        name = "troop"
+        name = "troop1"
+        zPosition = 1
         
         // player physics body
         physicsBody = SKPhysicsBody(rectangleOf: size)
@@ -32,11 +34,30 @@ class Player: SKSpriteNode {
         physicsBody?.contactTestBitMask = 2
         physicsBody?.collisionBitMask = 2
         
-        let troopMovement = CGFloat(8.0)
-        
-        let actionTMove = SKAction.move(to: CGPoint(x:240, y:-136), duration: TimeInterval(troopMovement))
-        run(SKAction.sequence([actionTMove]))
+        moveTroop()
+
     }
+    
+    @objc func moveTroop() {
+        let tPath = UIBezierPath()
+        tPath.move(to: CGPoint(x:0, y:0))
+        tPath.addLine(to: CGPoint(x: 800, y:0))
+
+        let troopMove = SKAction.follow(tPath.cgPath, asOffset: true, orientToPath: false, speed: 30)
+        self.run(troopMove)
+    }
+    
+//    @objc func pCollision() {
+//        
+//        let collisionPath = UIBezierPath()
+//        collisionPath.move(to: CGPoint(x: 0, y: 0))
+//        collisionPath.addLine(to: CGPoint(x: -200, y: 0))
+//        
+//        let actionBounce = SKAction.follow(collisionPath.cgPath, asOffset: true, orientToPath: false, speed: 200)
+//        self.run(actionBounce)
+//        
+//        
+//    }
 }
 
 

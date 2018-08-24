@@ -27,7 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ground()
         
         
-        Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
         //Timer for enemy spawn
         
         let camera = SKCameraNode()
@@ -50,11 +50,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         newEnemy.loadEnemy()
         self.addChild(newEnemy)
     }
-    
+    //troop spawn
     func spawnTroop() {
-        let newTroop = Player(imageNamed: "troop")
+        let newTroop = Player(imageNamed: "Troop1")
         newTroop.loadtroop()
-        newTroop.zPosition = 1
         self.addChild(newTroop)
     }
     
@@ -74,6 +73,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.camera?.position.x += (deltax * -1)
         }
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        if(buttonT1.contains((touches.first?.location(in: self))!)) {
+            spawnTroop()
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch in touches{
+            let touchlocation = touch.location(in: self)
+            
+            if touchlocation == buttonT1.position {
+                spawnTroop()
+            }
+        }
+    }
 
     // the physics contact delegate handles all collisions and contacts between physics bodies
     func didBegin(_ contact: SKPhysicsContact) {
@@ -81,7 +97,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var firstBody = SKPhysicsBody()
         var secondBody = SKPhysicsBody()
         
-        if contact.bodyA.node?.name == "enemy1" {
+        if contact.bodyA.node?.name == contact.bodyB.node?.name {
             firstBody = contact.bodyA
             secondBody = contact.bodyB
         } else {
@@ -91,6 +107,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.node?.name == "enemy1" && secondBody.node?.name == "playerBase" {
             let enemy = firstBody.node as! Enemy
+            
             enemy.EnemyHealth -= 20
             print(enemy.EnemyHealth)
             if (enemy.EnemyHealth <= 0) {
@@ -98,17 +115,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        if firstBody.node?.name == "enemy1" && secondBody.node?.name == "troop"{
-                        
-            let array = ["1","2"]
-            let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
-            let randomitem = array[randomIndex]
-
-            if randomitem == "1" {
+        if firstBody.node?.name == "enemy1" && secondBody.node?.name == "troop1"{
+            let enemy = firstBody.node as! Enemy
+            let troop = secondBody.node as! Player
+            
+            print("yesss")
+            
+            enemy.EnemyHealth -= troop.playerAttack
+            troop.playerHealth -= enemy.enemyAttack
+            print(enemy.EnemyHealth)
+            print(troop.playerHealth)
+            
+            troop.physicsBody?.applyImpulse(CGVector(dx: -50, dy: 0))
+            enemy.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 0))
+            
+            if (enemy.EnemyHealth <= 0) {
                 firstBody.node?.removeFromParent()
-            }else {
+            } else if (troop.playerHealth <= 0){
                 secondBody.node?.removeFromParent()
             }
+            troop.moveTroop()
+            enemy.moveEnemy()
         }
     }
     
@@ -163,6 +190,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         imgNode1.physicsBody?.pinned = true
         imgNode1.physicsBody?.affectedByGravity = false
         imgNode1.physicsBody?.isDynamic = false
+        
+        Ground2.physicsBody = SKPhysicsBody(texture: Ground, size: Ground.size())
+        Ground2.physicsBody?.pinned = true
+        Ground2.physicsBody?.affectedByGravity = false
+        Ground2.physicsBody?.isDynamic = false
         
     }
     
