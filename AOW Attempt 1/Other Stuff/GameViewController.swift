@@ -28,17 +28,8 @@ class GameViewController: UIViewController {
         scene.scaleMode = .aspectFill
         
         skView.presentScene(scene)
-
+        
     }
-    
-    @IBAction func handlePan(recogniser:UIPanGestureRecognizer) {
-        let translation = recogniser.translation(in: self.view)
-        if let view = recogniser.view {
-            view.center = CGPoint(x: view.center.x + translation.x, y: view.center.y + translation.y)
-        }
-        recogniser.setTranslation(CGPoint.zero, in: self.view)
-    }
-    
     
     override var shouldAutorotate: Bool {
         return true
@@ -57,7 +48,16 @@ class GameViewController: UIViewController {
         // Release any cached data, images, etc that aren't in use.
     }
 
-    override var prefersStatusBarHidden: Bool {
-        return true
+    
+    @IBAction func TroopB1(_ sender: AnyObject) {
+        ((self.view as? SKView)?.scene as? GameScene)?.spawnTroop1()
+    }
+    @IBAction func TroopB2(_ sender: AnyObject) {
+        ((self.view as? SKView)?.scene as? GameScene)?.spawnTroop2()
+    }
+    @IBAction func NEButton(_ sender: UIButton) {
+        
     }
 }
+
+

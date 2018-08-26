@@ -10,26 +10,21 @@ import Foundation
 import SpriteKit
 
 class Player: SKSpriteNode {
+    
     var playerHealth = 100
-    var playerAttack = 10
-    
-    func pickTroop() {
-//        var Trooparray = ["Troop1","Troop2"]
-//        var arrayIndex: Int = 0
-        
-    }
-    
+    var playerAttack = 25
+
     func loadtroop()
     {
         //setting position and name of SpriteNode
         position = CGPoint(x:-280, y:-136)
-        name = "troop1"
+        name = "troop"
         zPosition = 1
         
         // player physics body
         physicsBody = SKPhysicsBody(rectangleOf: size)
         physicsBody?.isDynamic = true
-        physicsBody?.affectedByGravity = false
+        physicsBody?.affectedByGravity = true
         physicsBody?.categoryBitMask = 1
         physicsBody?.contactTestBitMask = 2
         physicsBody?.collisionBitMask = 2
@@ -46,18 +41,5 @@ class Player: SKSpriteNode {
         let troopMove = SKAction.follow(tPath.cgPath, asOffset: true, orientToPath: false, speed: 30)
         self.run(troopMove)
     }
-    
-//    @objc func pCollision() {
-//        
-//        let collisionPath = UIBezierPath()
-//        collisionPath.move(to: CGPoint(x: 0, y: 0))
-//        collisionPath.addLine(to: CGPoint(x: -200, y: 0))
-//        
-//        let actionBounce = SKAction.follow(collisionPath.cgPath, asOffset: true, orientToPath: false, speed: 200)
-//        self.run(actionBounce)
-//        
-//        
-//    }
 }
-
 
