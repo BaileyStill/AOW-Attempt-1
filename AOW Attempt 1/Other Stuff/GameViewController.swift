@@ -55,7 +55,7 @@ class GameViewController: UIViewController {
     @IBAction func TroopB2(_ sender: AnyObject) {
         ((self.view as? SKView)?.scene as? GameScene)?.spawnTroop2()
     }
-    @IBAction func NEButton(_ sender: UIButton) {
+    @IBAction func NEButton(_ sender: AnyObject) {
         
     }
 }

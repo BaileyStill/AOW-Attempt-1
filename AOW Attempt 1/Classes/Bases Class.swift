@@ -13,7 +13,7 @@ class Bases: SKSpriteNode {
     var baseHealth = 5000
     
     func loadBase() {
-        zPosition = -1
+        zPosition = -3
         
         physicsBody = SKPhysicsBody(rectangleOf: size)
         physicsBody?.isDynamic = false

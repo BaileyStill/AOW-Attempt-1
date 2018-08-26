@@ -12,7 +12,9 @@ import AVFoundation
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     let background = SKSpriteNode(imageNamed: "BackGround")
+    let cam = SKCameraNode()
 
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         
@@ -21,17 +23,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemyBase()
         playerBase()
         
-        Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
+        // randomising time for each spawn
+        let arraytime = [1,2,3,4,5,6,7,8,9]
+        let ran = Int(arc4random_uniform(UInt32(arraytime.count)))
+        let ranNum = arraytime[ran]
         //Timer for enemy spawn
+        Timer.scheduledTimer(timeInterval: TimeInterval(ranNum), target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
         
-        let camera = SKCameraNode()
-        camera.position = CGPoint(x: -100, y: 0)
-        camera.xScale = 0.75
-        self.camera = camera
+        //Setting up the camera and its position in the Scene
+        cam.position = CGPoint(x: -100, y: 0)
+        cam.xScale = 0.75
+        cam.zPosition = 6
+        self.camera = cam
+
+        self.addChild(cam)
         
-        self.addChild(camera)
+        func playerGUI() {
+            let xpLab: SKLabelNode = SKLabelNode(fontNamed: "Copperplate")
+            xpLab.fontSize = 14
+            xpLab.fontColor = .black
+            xpLab.text = "0"
+            xpLab.position = CGPoint(x: 300, y: 120)
+            
+            cam.addChild(xpLab)
+            
+            let moneyLab: SKLabelNode = SKLabelNode(fontNamed: "Copperplate")
+            moneyLab.fontSize = 14
+            moneyLab.fontColor = .black
+            moneyLab.text = "100"
+            moneyLab.position = CGPoint(x: 300, y:145)
+            
+            cam.addChild(moneyLab)
+        }
+        
     }
     
+    //Loading in the background image :)
     func bGround(){
         let background = SKSpriteNode(imageNamed: "BackGround")
         background.position = CGPoint(x:0 , y:0)
@@ -53,11 +80,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func enemyBase() {
         let newEbase = Bases(imageNamed: "Base1")
         newEbase.loadBase()
-        newEbase.position = CGPoint(x: 550, y: -90)
+        newEbase.position = CGPoint(x: 560, y: -90)
         newEbase.name = "enemyBase"
         self.addChild(newEbase)
     }
-    
+//loading ground into scene
     func ground(){
         let imgGround = SKTexture(imageNamed:"Ground")
         let imgNode1 = SKSpriteNode(texture: imgGround)
@@ -70,23 +97,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(imgNode1)
         self.addChild(Ground2)
         
-        imgNode1.physicsBody = SKPhysicsBody(texture: imgGround, size: imgGround.size())
-        imgNode1.physicsBody?.pinned = true
-        imgNode1.physicsBody?.affectedByGravity = false
-        imgNode1.physicsBody?.isDynamic = false
-        
-        Ground2.physicsBody = SKPhysicsBody(texture: Ground, size: Ground.size())
-        Ground2.physicsBody?.pinned = true
-        Ground2.physicsBody?.affectedByGravity = false
-        Ground2.physicsBody?.isDynamic = false
     }
     
-    // Enemy Spawn
+    func updatePlayer() {
+        
+    }
+    
+    
+    // Enemy Spawn through random enemy
     @objc func spawnEnemy() {
-        let arrayEnemy = ["Enemy1", "Enemy2"]
+        let arrayEnemy = ["Enemy1", "Enemy 2"]
+        let r = Int(arc4random_uniform(UInt32(arrayEnemy.count)))
+        let enemyImg = arrayEnemy[r]
         
-        
-        let newEnemy = Enemy(imageNamed: "Enemy1")
+        let newEnemy = Enemy(imageNamed: enemyImg)
         newEnemy.loadEnemy()
         self.addChild(newEnemy)
     }
@@ -105,6 +129,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(newTroop2)
     }
     
+    
+    
     // Pan Function connect to the camera Node used for scrolling between HomeBase and EnemyBase
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
@@ -121,6 +147,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.camera?.position.x += (deltax * -1)
         }
     }
+    
+    
     
     // the physics contact delegate handles all collisions and contacts between physics bodies
     func didBegin(_ contact: SKPhysicsContact) {
@@ -160,11 +188,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if (enemy.EnemyHealth <= 0) {
                 firstBody.node?.removeFromParent()
+                
+                let XP = cam.childNode(withName: "xpLab")
+                XP.text = Int(XP.text!)!; +50
+                
+                
             } else if (troop.playerHealth <= 0){
                 secondBody.node?.removeFromParent()
             }
-            troop.moveTroop()
-            enemy.moveEnemy()
         }
         
         if firstBody.node?.name == "troop" && secondBody.node?.name == "enemyBase"{
