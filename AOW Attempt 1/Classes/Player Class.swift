@@ -17,7 +17,7 @@ class Player: SKSpriteNode {
     func loadtroop()
     {
         //setting position and name of SpriteNode
-        position = CGPoint(x:-280, y:-137)
+        position = CGPoint(x:-280, y:-136)
         name = "troop"
         zPosition = 1
         

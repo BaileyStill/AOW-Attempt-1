@@ -19,9 +19,10 @@ class Bases: SKSpriteNode {
         physicsBody?.isDynamic = false
         physicsBody?.pinned = true
         physicsBody?.affectedByGravity = false
-        physicsBody?.categoryBitMask = 1
-        physicsBody?.contactTestBitMask = 2
-        physicsBody?.collisionBitMask = 2
+        physicsBody?.categoryBitMask = 0
+        physicsBody?.contactTestBitMask = 1 | 2
+        physicsBody?.collisionBitMask = 1 | 2
+        
     }
 }
 

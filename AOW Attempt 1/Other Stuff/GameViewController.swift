@@ -54,9 +54,26 @@ class GameViewController: UIViewController {
     }
     @IBAction func TroopB2(_ sender: AnyObject) {
         ((self.view as? SKView)?.scene as? GameScene)?.spawnTroop2()
+        
+        
     }
     @IBAction func NEButton(_ sender: AnyObject) {
+        let xpValue = Int((((self.view as? SKView)?.scene as? GameScene)?.xpLab.text!)!)!
         
+        if (xpValue >= 2000) {
+            ((self.view as? SKView)?.scene as? GameScene)?.xpLab.text = String(Int((((self.view as? SKView)?.scene as? GameScene)?.xpLab.text!)!)! - 2000)
+            
+            for child in (((self.view as? SKView)?.scene as? GameScene)?.children)! {
+                if ((child.name == "playerBase") || (child.name == "enemyBase")) {
+                    let base = child as! Bases
+                    base.texture = SKTexture(imageNamed: "Base2")
+                    base.position.y += 30
+                    base.baseHealth = base.baseHealth + 1000
+                    
+            
+                }
+            }
+        }
     }
 }
 

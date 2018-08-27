@@ -13,8 +13,9 @@ import AVFoundation
 class GameScene: SKScene, SKPhysicsContactDelegate {
     let background = SKSpriteNode(imageNamed: "BackGround")
     let cam = SKCameraNode()
+    let xpLab: SKLabelNode = SKLabelNode(fontNamed: "Copperplate")
+    let moneyLab: SKLabelNode = SKLabelNode(fontNamed: "Copperplate")
 
-    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         
@@ -23,12 +24,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemyBase()
         playerBase()
         
-        // randomising time for each spawn
-        let arraytime = [1,2,3,4,5,6,7,8,9]
-        let ran = Int(arc4random_uniform(UInt32(arraytime.count)))
-        let ranNum = arraytime[ran]
+
         //Timer for enemy spawn
-        Timer.scheduledTimer(timeInterval: TimeInterval(ranNum), target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(4), target: self, selector: #selector(self.spawnEnemy), userInfo: nil, repeats: true)
         
         //Setting up the camera and its position in the Scene
         cam.position = CGPoint(x: -100, y: 0)
@@ -38,25 +36,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         self.addChild(cam)
         
-        func playerGUI() {
-            let xpLab: SKLabelNode = SKLabelNode(fontNamed: "Copperplate")
-            xpLab.fontSize = 14
-            xpLab.fontColor = .black
-            xpLab.text = "0"
-            xpLab.position = CGPoint(x: 300, y: 120)
-            
-            cam.addChild(xpLab)
-            
-            let moneyLab: SKLabelNode = SKLabelNode(fontNamed: "Copperplate")
-            moneyLab.fontSize = 14
-            moneyLab.fontColor = .black
-            moneyLab.text = "100"
-            moneyLab.position = CGPoint(x: 300, y:145)
-            
-            cam.addChild(moneyLab)
-        }
+        xpLab.fontSize = 14
+        xpLab.fontColor = .black
+        xpLab.text = "0"
+        xpLab.position = CGPoint(x: 300, y: 120)
+                
+        cam.addChild(xpLab)
+                
+        moneyLab.fontSize = 14
+        moneyLab.fontColor = .black
+        moneyLab.text = "100"
+        moneyLab.position = CGPoint(x: 300, y:145)
+                
+        cam.addChild(moneyLab)
         
     }
+    
     
     //Loading in the background image :)
     func bGround(){
@@ -99,11 +94,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func updatePlayer() {
-        
-    }
-    
-    
     // Enemy Spawn through random enemy
     @objc func spawnEnemy() {
         let arrayEnemy = ["Enemy1", "Enemy 2"]
@@ -116,17 +106,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     // Troop Spawn func
     func spawnTroop1() {
-        let newTroop = Player(imageNamed: "Troop1")
-        newTroop.loadtroop()
-        self.addChild(newTroop)
+        let moneyInt = Int(moneyLab.text!)!
+        
+        if (moneyInt >= 100) {
+            moneyLab.text = String(Int(moneyLab.text!)! - 100)
+        
+            let newTroop = Player(imageNamed: "Troop1")
+            newTroop.loadtroop()
+            self.addChild(newTroop)
+        }
     }
     // 2nd Troop Spawn func
     func spawnTroop2() {
-        let newTroop2 = Player(imageNamed: "Troop2")
-        newTroop2.loadtroop()
-        newTroop2.playerAttack = 40
-        newTroop2.playerHealth = 75
-        self.addChild(newTroop2)
+        let moneyInt = Int(moneyLab.text!)!
+
+        if (moneyInt >= 70) {
+            moneyLab.text = String(Int(moneyLab.text!)! - 70)
+
+            let newTroop2 = Player(imageNamed: "Troop2")
+            newTroop2.loadtroop()
+            newTroop2.playerAttack = 40
+            newTroop2.playerHealth = 75
+            self.addChild(newTroop2)
+        }
     }
     
     
@@ -166,8 +168,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.node?.name == "enemy" && secondBody.node?.name == "playerBase" {
             let enemy = firstBody.node as! Enemy
+            let base = secondBody.node as! Bases
             
             enemy.EnemyHealth -= 20
+            base.baseHealth = base.baseHealth - enemy.enemyAttack
+            
             print(enemy.EnemyHealth)
             if (enemy.EnemyHealth <= 0) {
                 firstBody.node?.removeFromParent()
@@ -183,34 +188,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print(enemy.EnemyHealth)
             print(troop.playerHealth)
             
-            troop.physicsBody?.applyImpulse(CGVector(dx: -20, dy: 0))
-            enemy.physicsBody?.applyImpulse(CGVector(dx: 20, dy: 0))
-            
-            if (enemy.EnemyHealth <= 0) {
-                firstBody.node?.removeFromParent()
+            //while firstBody.node == enemy && secondBody.node == troop {
+                if (enemy.EnemyHealth <= 0 ) {
+                    firstBody.node?.removeFromParent()
+                    xpLab.text = String(Int(xpLab.text!)! + 50)
+                    moneyLab.text = String(Int(moneyLab.text!)! + 75)
                 
-                let XP = cam.childNode(withName: "xpLab")
-                XP.text = Int(XP.text!)!; +50
-                
-                
-            } else if (troop.playerHealth <= 0){
-                secondBody.node?.removeFromParent()
-            }
+                } else if (troop.playerHealth <= 0){
+                    secondBody.node?.removeFromParent()
+                }
         }
         
         if firstBody.node?.name == "troop" && secondBody.node?.name == "enemyBase"{
             let player = firstBody.node as! Player
-            let Base = secondBody.node as! Bases
+            let base = secondBody.node as! Bases
             
             player.playerHealth -= 20
-            Base.baseHealth = Base.baseHealth - player.playerAttack
+            base.baseHealth = base.baseHealth - player.playerAttack
+            
             print(player.playerHealth)
-            print(Base.baseHealth)
+            print(base.baseHealth)
+            
             if(player.playerHealth <= 0){
                 firstBody.node?.removeFromParent()
             }
         }
     }
-}
+    
+    override func update(_ currentTime: TimeInterval) {
+        moneyLab.text = String(Int(moneyLab.text!)! + 1)
+        xpLab.text = String(Int(xpLab.text!)! + 1)
+        }
+    }
 
 

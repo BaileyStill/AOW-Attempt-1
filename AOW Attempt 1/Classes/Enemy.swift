@@ -17,7 +17,7 @@ class Enemy:SKSpriteNode {
     func loadEnemy() {
         
 // Sets Position and Name
-        position = CGPoint(x: 510, y: -136)
+        position = CGPoint(x: 545, y: -136)
         name = "enemy"
         zPosition = 1
         
@@ -31,6 +31,7 @@ class Enemy:SKSpriteNode {
         
         moveEnemy()
     }
+    
     
 //function for moving enemy along set path to user base
     @objc func moveEnemy() {

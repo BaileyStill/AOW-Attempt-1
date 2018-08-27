@@ -123,7 +123,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4rW-uN-hqH" userLabel="Troop1Button">
                                 <rect key="frame" x="11" y="45" width="59" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button1" image="Troop1"/>
+                                <color key="backgroundColor" red="1" green="0.3638190348" blue="0.3841834905" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Troop1">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="TroopB1:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Mga-jb-crQ"/>
                                 </connections>
@@ -131,7 +134,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V0O-rF-L6O" userLabel="Troop2Button">
                                 <rect key="frame" x="11" y="111" width="59" height="59"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button" image="Troop2"/>
+                                <color key="backgroundColor" red="1" green="0.3638190348" blue="0.3841834905" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Trrop2">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="TroopB2:" destination="BV1-FR-VrT" eventType="touchUpInside" id="9CO-k8-ZXX"/>
                                 </connections>
@@ -194,7 +200,5 @@
     <resources>
         <image name="BackGround" width="1428" height="481"/>
         <image name="Normal" width="196" height="188"/>
-        <image name="Troop1" width="61" height="58"/>
-        <image name="Troop2" width="59" height="56"/>
     </resources>
 </document>
